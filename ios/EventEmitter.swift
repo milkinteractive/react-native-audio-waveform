@@ -19,10 +19,10 @@ class EventEmitter {
 
   /// All Events which must be support by React Native.
   lazy var allEvents: [String] = {
-    var allEventNames: [String] = ["onDidFinishPlayingAudio", "onCurrentDuration", "onCurrentExtractedWaveformData", "onCurrentRecordingWaveformData"]
-    
+    var allEventNames: [String] = ["onCurrentRecordingWaveformData"]
+
     // Append all events here
-    
+
     return allEventNames
   }()
 
