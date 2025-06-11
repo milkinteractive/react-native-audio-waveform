@@ -75,9 +75,11 @@ const styles = (params: StyleSheetParams = {}) =>
       justifyContent: 'center',
     },
     recordAudioPressable: {
-      height: scale(40),
-      width: scale(40),
-      padding: scale(8),
+      backgroundColor: Colors.pink,
+      paddingHorizontal: scale(16),
+      paddingVertical: scale(12),
+      borderRadius: scale(8),
+      marginLeft: scale(8),
     },
     liveWaveformContainer: {
       flexDirection: 'row',
@@ -133,6 +135,28 @@ const styles = (params: StyleSheetParams = {}) =>
       fontSize: scale(10),
       textAlign: 'center',
       fontWeight: '600',
+    },
+    title: {
+      fontSize: scale(24),
+      fontWeight: 'bold',
+      color: Colors.pink,
+      textAlign: 'center',
+      marginBottom: scale(8),
+    },
+    subtitle: {
+      fontSize: scale(16),
+      color: Colors.gray,
+      textAlign: 'center',
+      marginBottom: scale(24),
+    },
+    buttonText: {
+      color: Colors.white,
+      fontSize: scale(14),
+      fontWeight: '600',
+      textAlign: 'center',
+    },
+    scrollView: {
+      flex: 1,
     },
   });
 

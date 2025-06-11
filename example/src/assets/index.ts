@@ -1,2 +1,1 @@
-export * from './audio';
-export * from './icons';
+// No assets needed for simplified version
