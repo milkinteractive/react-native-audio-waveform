@@ -2,8 +2,8 @@
   "name": "@milkinteractive/react-native-audio-waveform",
   "version": "1.0.0",
   "description": "React Native Live Audio Waveform Package to generate waveform visualization in real time.",
-  "main": "lib/index",
-  "types": "lib/index.d.ts",
+  "main": "src/index",
+  "types": "src/index.ts",
   "contributors": [],
   "author": "Milk Interactive",
   "repository": {
