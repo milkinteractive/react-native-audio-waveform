@@ -1,7 +1,5 @@
 package com.audiowaveform
 
-import android.media.AudioFormat
-import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.os.Handler
 import android.os.Looper
@@ -13,22 +11,18 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
+import java.io.File
 import kotlin.math.log10
-import kotlin.math.sqrt
 
 class AudioWaveformModule(context: ReactApplicationContext): ReactContextBaseJavaModule(context) {
-    private var audioRecord: AudioRecord? = null
+    private var mediaRecorder: MediaRecorder? = null
     private var isRecording = false
     private val handler = Handler(Looper.getMainLooper())
     private var updateFrequency: UpdateFrequency = UpdateFrequency.Medium
-    private var recordingThread: Thread? = null
+    private var monitoringRunnable: Runnable? = null
 
     companion object {
         const val NAME = "AudioWaveform"
-        private const val SAMPLE_RATE = 44100
-        private const val CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO
-        private const val AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT
-        private const val BUFFER_SIZE_FACTOR = 2
     }
 
     override fun getName(): String {
@@ -68,75 +62,83 @@ class AudioWaveformModule(context: ReactApplicationContext): ReactContextBaseJav
 
     @ReactMethod
     fun getCurrentDecibel(promise: Promise) {
-        // This would return the current decibel level if we were monitoring
-        // For now, return 0 as a placeholder
-        promise.resolve(0.0)
+        val decibel = getDecibelLevel()
+        promise.resolve(decibel)
     }
 
     private fun startAudioRecording() {
-        val bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT) * BUFFER_SIZE_FACTOR
+        // Create a temporary file for recording (we don't actually save it)
+        val tempFile = File(reactApplicationContext.cacheDir, "temp_recording.m4a")
 
-        audioRecord = AudioRecord(
-            MediaRecorder.AudioSource.MIC,
-            SAMPLE_RATE,
-            CHANNEL_CONFIG,
-            AUDIO_FORMAT,
-            bufferSize
-        )
-
-        audioRecord?.startRecording()
-
-        recordingThread = Thread {
-            processAudioData(bufferSize)
+        mediaRecorder = MediaRecorder().apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setAudioSamplingRate(44100)
+            setOutputFile(tempFile.absolutePath)
+            prepare()
+            start()
         }
-        recordingThread?.start()
+
+        startMonitoring()
     }
 
     private fun stopAudioRecording() {
+        stopMonitoring()
+
+        try {
+            mediaRecorder?.apply {
+                stop()
+                release()
+            }
+        } catch (e: Exception) {
+            Log.e(NAME, "Error stopping MediaRecorder: ${e.message}")
+        }
+
+        mediaRecorder = null
         isRecording = false
-        audioRecord?.stop()
-        audioRecord?.release()
-        audioRecord = null
-        recordingThread?.interrupt()
-        recordingThread = null
+
+        // Clean up temp file
+        val tempFile = File(reactApplicationContext.cacheDir, "temp_recording.m4a")
+        if (tempFile.exists()) {
+            tempFile.delete()
+        }
     }
 
-    private fun processAudioData(bufferSize: Int) {
-        val buffer = ShortArray(bufferSize)
+    private fun startMonitoring() {
+        monitoringRunnable = object : Runnable {
+            override fun run() {
+                if (isRecording) {
+                    val decibel = getDecibelLevel()
 
-        while (isRecording && audioRecord?.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
-            val readSize = audioRecord?.read(buffer, 0, bufferSize) ?: 0
-
-            if (readSize > 0) {
-                // Calculate RMS (Root Mean Square) for amplitude
-                var sum = 0.0
-                for (i in 0 until readSize) {
-                    val sample = buffer[i].toDouble() / Short.MAX_VALUE
-                    sum += sample * sample
-                }
-
-                val rms = sqrt(sum / readSize)
-                val decibel = 20 * log10(rms + 0.0001) // Add small value to avoid log(0)
-
-                // Normalize decibel to 0-1 range (assuming -60dB to 0dB range)
-                val normalizedDecibel = maxOf(0.0, minOf(1.0, (decibel + 60) / 60))
-
-                // Send to React Native
-                handler.post {
                     val args: WritableMap = Arguments.createMap()
-                    args.putDouble("currentDecibel", normalizedDecibel)
+                    args.putDouble(Constants.currentDecibel, decibel)
+
                     reactApplicationContext
                         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                        ?.emit("onCurrentRecordingWaveformData", args)
+                        ?.emit(Constants.onCurrentRecordingWaveformData, args)
+
+                    handler.postDelayed(this, updateFrequency.value)
                 }
             }
+        }
 
-            // Sleep based on update frequency
-            try {
-                Thread.sleep(updateFrequency.value)
-            } catch (e: InterruptedException) {
-                break
-            }
+        handler.post(monitoringRunnable!!)
+    }
+
+    private fun stopMonitoring() {
+        monitoringRunnable?.let { handler.removeCallbacks(it) }
+        monitoringRunnable = null
+    }
+
+    private fun getDecibelLevel(): Double {
+        return try {
+            val amplitude = mediaRecorder?.maxAmplitude?.toDouble() ?: 0.0
+            // Convert to linear scale (0.0 to 1.0)
+            amplitude / 32768.0
+        } catch (e: Exception) {
+            Log.e(NAME, "Error getting decibel level: ${e.message}")
+            0.0
         }
     }
 }
