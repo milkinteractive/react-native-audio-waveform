@@ -1,16 +1,16 @@
 {
-  "name": "@simform_solutions/react-native-audio-waveform",
-  "version": "2.1.5",
+  "name": "@milkinteractive/react-native-audio-waveform",
+  "version": "1.0.0",
   "description": "React Native Live Audio Waveform Package to generate waveform visualization in real time.",
   "main": "lib/index",
   "types": "lib/index.d.ts",
   "contributors": [],
-  "author": "Simform Solutions",
+  "author": "Milk Interactive",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SimformSolutionsPvtLtd/react-native-audio-waveform"
+    "url": "https://github.com/milkinteractive/react-native-audio-waveform"
   },
-  "homepage": "https://github.com/SimformSolutionsPvtLtd/react-native-audio-waveform#readme",
+  "homepage": "https://github.com/milkinteractive/react-native-audio-waveform#readme",
   "keywords": [
     "react",
     "react-native",

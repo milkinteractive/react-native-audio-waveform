@@ -3,9 +3,8 @@ const pak = require('../package.json');
 
 module.exports = {
   dependencies: {
-    [pak.name]: {
+    '@milkinteractive/react-native-audio-waveform': {
       root: path.join(__dirname, '..'),
     },
   },
-  assets: ['src/assets/audio'],
 };

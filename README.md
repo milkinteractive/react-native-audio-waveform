@@ -2,7 +2,9 @@
 
 A React Native component for live audio waveform visualization
 
-[![react-native-audio-waveform on npm](https://img.shields.io/npm/v/@simform_solutions/react-native-audio-waveform.svg?&logo=npm&logoColor=white&color=red&labelColor=grey&cacheSeconds=3600&maxAge=86400)](https://www.npmjs.com/package/@simform_solutions/react-native-audio-waveform) [![Android](https://img.shields.io/badge/Platform-Android-green?logo=android&logoColor=white&labelColor=grey)](https://www.android.com) [![iOS](https://img.shields.io/badge/Platform-iOS-green?logo=apple&logoColor=white&labelColor=grey)](https://developer.apple.com/ios) [![MIT](https://img.shields.io/badge/License-MIT-green&labelColor=grey)](https://opensource.org/licenses/MIT)
+[![react-native-audio-waveform on npm](https://img.shields.io/npm/v/@milkinteractive/react-native-audio-waveform.svg?&logo=npm&logoColor=white&color=red&labelColor=grey&cacheSeconds=3600&maxAge=86400)](https://www.npmjs.com/package/@milkinteractive/react-native-audio-waveform) [![Android](https://img.shields.io/badge/Platform-Android-green?logo=android&logoColor=white&labelColor=grey)](https://www.android.com) [![iOS](https://img.shields.io/badge/Platform-iOS-green?logo=apple&logoColor=white&labelColor=grey)](https://developer.apple.com/ios) [![MIT](https://img.shields.io/badge/License-MIT-green&labelColor=grey)](https://opensource.org/licenses/MIT)
+
+> **Note**: This is a simplified fork of [@simform_solutions/react-native-audio-waveform](https://github.com/SimformSolutionsPvtLtd/react-native-audio-waveform) that focuses exclusively on **live waveform visualization**. All audio recording, playback, and file processing features have been removed to create a minimal, lightweight library for real-time audio visualization only.
 
 ---
 
@@ -31,7 +33,7 @@ A lightweight React Native package for generating live audio waveform visualizat
 ## Installation
 
 ```bash
-npm install @simform_solutions/react-native-audio-waveform
+npm install @milkinteractive/react-native-audio-waveform
 ```
 
 ### iOS Setup
@@ -49,7 +51,7 @@ No additional setup required for Android.
 ```tsx
 import React, { useRef } from 'react';
 import { View, Pressable, Text } from 'react-native';
-import { Waveform, IWaveformRef, UpdateFrequency } from '@simform_solutions/react-native-audio-waveform';
+import { Waveform, IWaveformRef, UpdateFrequency } from '@milkinteractive/react-native-audio-waveform';
 
 const LiveWaveformExample = () => {
   const ref = useRef<IWaveformRef>(null);
@@ -124,6 +126,30 @@ const LiveWaveformExample = () => {
 
 Check out the example app in the `example/` directory for a complete implementation.
 
+## Differences from Original
+
+This fork differs from the original [@simform_solutions/react-native-audio-waveform](https://github.com/SimformSolutionsPvtLtd/react-native-audio-waveform) in the following ways:
+
+### ✅ **Kept Features:**
+- Live waveform visualization
+- Real-time audio level monitoring
+- Customizable waveform appearance
+- Cross-platform support (iOS & Android)
+- TypeScript support
+
+### ❌ **Removed Features:**
+- Audio recording functionality
+- Audio playback functionality
+- Static waveform from audio files
+- Audio file processing
+- Permission handling
+- Player controls (play, pause, stop, seek)
+- Speed control
+- All audio file dependencies
+
+### 🎯 **Why This Fork?**
+This simplified version is perfect for applications that only need **live audio visualization** without the overhead of full audio recording/playback capabilities. It results in a much smaller bundle size and fewer dependencies.
+
 ## License
 
 MIT
@@ -132,12 +158,12 @@ MIT
 
 ## Find this library useful? ❤️
 
-Support it by joining [stargazers](https://github.com/SimformSolutionsPvtLtd/react-native-audio-waveform/stargazers) for this repository. ⭐
+Support it by joining [stargazers](https://github.com/milkinteractive/react-native-audio-waveform/stargazers) for this repository. ⭐
 
 ## Bugs and Feedback
 
-For bugs, feature requests, and discussion please use [GitHub Issues](https://github.com/SimformSolutionsPvtLtd/react-native-audio-waveform/issues).
+For bugs, feature requests, and discussion please use [GitHub Issues](https://github.com/milkinteractive/react-native-audio-waveform/issues).
 
-## Made with ❤️ at Simform
+## Made with ❤️ at Milk Interactive
 
 [<img src="https://github.com/SimformSolutionsPvtLtd/Simform/blob/master/Assets/simform_logo.png" width="300">](https://simform.com/)

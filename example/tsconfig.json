@@ -12,7 +12,7 @@
     "target": "esnext",
     "skipLibCheck": true,
     "paths": {
-      "@simform_solutions/react-native-audio-waveform": ["../src"]
+      "@milkinteractive/react-native-audio-waveform": ["../src"]
     }
   },
   "exclude": [

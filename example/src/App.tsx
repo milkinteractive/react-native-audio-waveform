@@ -2,7 +2,7 @@ import {
   IWaveformRef,
   UpdateFrequency,
   Waveform,
-} from '@simform_solutions/react-native-audio-waveform';
+} from '@milkinteractive/react-native-audio-waveform';
 import React, {
   useRef,
   useState,
